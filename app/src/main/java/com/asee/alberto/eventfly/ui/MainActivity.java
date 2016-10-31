@@ -1,14 +1,8 @@
 package com.asee.alberto.eventfly.ui;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,8 +15,7 @@ import android.view.MenuItem;
 
 
 import com.asee.alberto.eventfly.R;
-import com.asee.alberto.eventfly.fragment.MainFragment;
-import com.asee.alberto.eventfly.fragment.RegisterFragment;
+import com.asee.alberto.eventfly.fragment.MapFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +35,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Load the map view as first screen
+        navigationView.getMenu().getItem(0).setChecked(true);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.main_content, new MapFragment()).addToBackStack(null).commit();
+
     }
 
     @Override
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_map) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.main_content, new MainFragment()).addToBackStack(null).commit();
+            fragmentTransaction.add(R.id.main_content, new MapFragment()).addToBackStack(null).commit();
 
         } else if (id == R.id.nav_gallery) {
 
