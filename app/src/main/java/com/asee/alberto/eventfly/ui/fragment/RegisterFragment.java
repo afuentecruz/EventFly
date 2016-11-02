@@ -1,4 +1,4 @@
-package com.asee.alberto.eventfly.fragment;
+package com.asee.alberto.eventfly.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

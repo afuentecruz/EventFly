@@ -8,7 +8,7 @@
     android:background="#151515"
     android:orientation="vertical"
     android:theme="@style/AppTheme"
-    tools:context=".ui.LoginActivity">
+    tools:context=".ui.activity.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

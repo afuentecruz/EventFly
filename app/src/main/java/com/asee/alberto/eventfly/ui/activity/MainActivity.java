@@ -1,4 +1,4 @@
-package com.asee.alberto.eventfly.ui;
+package com.asee.alberto.eventfly.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,10 +15,14 @@ import android.view.MenuItem;
 
 
 import com.asee.alberto.eventfly.R;
-import com.asee.alberto.eventfly.fragment.MapFragment;
+import com.asee.alberto.eventfly.ui.fragment.MapFragment;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String mActualScreen; // String to identify the currently displayed screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,8 @@ public class MainActivity extends AppCompatActivity
         // Load the map view as first screen
         navigationView.getMenu().getItem(0).setChecked(true);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_content, new MapFragment()).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.main_content, new MapFragment(), MapFragment.TAG).commit();
+        mActualScreen = MapFragment.TAG;
 
     }
 
@@ -82,8 +87,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_map) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.main_content, new MapFragment()).addToBackStack(null).commit();
+            if(!mActualScreen.equals(MapFragment.TAG)) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.main_content, new MapFragment(), MapFragment.TAG).commit();
+            }
 
         } else if (id == R.id.nav_gallery) {
 

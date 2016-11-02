@@ -1,6 +1,5 @@
-package com.asee.alberto.eventfly.fragment;
+package com.asee.alberto.eventfly.ui.fragment;
 
-import android.app.admin.SystemUpdatePolicy;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +14,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    public static String TAG = "MapFragment"; //TAG that identifies the fragment
 
     private GoogleMap mMap;
 
@@ -32,9 +33,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         return v;
     }
-
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

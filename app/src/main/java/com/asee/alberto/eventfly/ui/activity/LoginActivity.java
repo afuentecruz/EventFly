@@ -1,4 +1,4 @@
-package com.asee.alberto.eventfly.ui;
+package com.asee.alberto.eventfly.ui.activity;
 
 
 import android.content.Intent;
@@ -10,13 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.Fragment;
 
 
 import com.asee.alberto.eventfly.R;
-import com.asee.alberto.eventfly.fragment.RegisterFragment;
+import com.asee.alberto.eventfly.ui.fragment.RegisterFragment;
 
 /**
  * Created by alberto on 29/10/16.
