@@ -10,14 +10,20 @@
     android:theme="@style/AppTheme"
     tools:context=".ui.activity.LoginActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="179dp"
             android:layout_above="@+id/linearLayout"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
@@ -29,71 +35,61 @@
             android:contentDescription="Logo"
             app:srcCompat="@drawable/logo" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/edit_username"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName"
+            android:textColor="#FFFFFF"
+            android:textColorHint="@color/colorSecondaryText"
+            android:theme="@style/CustomEditText" />
 
-            <EditText
-                android:id="@+id/edit_username"
+        <EditText
+            android:id="@+id/edit_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="#FFFFFF"
+            android:textColorHint="@color/colorSecondaryText"
+            android:theme="@style/CustomEditText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.29"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_register"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:ems="10"
-                android:hint="Username"
-                android:inputType="textPersonName"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/colorSecondaryText"
-                android:theme="@style/CustomEditText" />
+                android:layout_height="38dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="15dp"
+                android:layout_weight="0.60"
+                android:background="@color/colorAccent"
+                android:text="Register"
+                android:textColor="@color/colorPrimaryText" />
 
-            <EditText
-                android:id="@+id/edit_password"
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textColor="#FFFFFF"
-                android:textColorHint="@color/colorSecondaryText"
-                android:theme="@style/CustomEditText" />
+                android:layout_height="38dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="0.60"
+                android:background="@color/colorAccent"
+                android:text="Login"
+                android:textColor="@color/colorPrimaryText" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4.29"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/button_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_weight="0.60"
-                    android:background="@color/colorAccent"
-                    android:text="Login"
-                    android:textColor="@color/colorPrimaryText" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/button_register"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.60"
-                    android:background="@color/colorAccent"
-                    android:text="Register"
-                    android:textColor="@color/colorPrimaryText" />
-            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>
