@@ -18,7 +18,12 @@ import android.support.v4.app.FragmentTransaction;
 
 
 import com.asee.alberto.eventfly.R;
+import com.asee.alberto.eventfly.manager.UserManager;
+import com.asee.alberto.eventfly.model.UserDB;
 import com.asee.alberto.eventfly.ui.fragment.RegisterFragment;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by alberto on 29/10/16.
@@ -36,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         mUser = (EditText) findViewById(R.id.edit_username);
         mPassword = (EditText) findViewById(R.id.edit_password);
         mLoginButton = (Button) findViewById(R.id.button_login);
@@ -46,7 +52,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-                    //TODO check database
+
+
+                    UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), "", mPassword.getText().toString(), ""));
 
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);

@@ -3,6 +3,7 @@
     package="com.asee.alberto.eventfly">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,7 +19,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity
+>
         <activity
             android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"

@@ -5,6 +5,8 @@ package com.asee.alberto.eventfly.manager;
  */
 
 import com.asee.alberto.eventfly.model.UserDB;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class UserManager {
     /**
@@ -13,5 +15,16 @@ public class UserManager {
 
     public static void saveOrUpdateUser(UserDB user){
 
+        Realm realm = Realm.getDefaultInstance(); //instantiate realmDB
+
+        //Save or update user
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+    }
+
+    public static UserDB getUser(){
+
+        return Realm.getDefaultInstance().where(UserDB.class).findFirst();
     }
 }
