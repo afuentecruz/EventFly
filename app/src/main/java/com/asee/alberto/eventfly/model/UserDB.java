@@ -1,4 +1,4 @@
-package com.model;
+package com.asee.alberto.eventfly.model;
 /**
  * Created by alberto on 15/11/16.
  */
@@ -6,27 +6,27 @@ package com.model;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class User extends RealmObject{
+public class UserDB extends RealmObject{
     /**
-     * User com.com.model for database
+     * UserDB model for database
      * */
     //Username
     private String name;
 
-    //User email
+    //UserDB email
     @PrimaryKey
     private String email;
 
-    //User password
+    //UserDB password
     private String password;
 
-    //User avatar
+    //UserDB avatar
     private String photo;
 
-    public User() {
+    public UserDB() {
     }
 
-    public User(String name, String email, String password, String photo) {
+    public UserDB(String name, String email, String password, String photo) {
         this.name = name;
         this.email = email;
         this.password = password;
