@@ -2,9 +2,13 @@ package com.asee.alberto.eventfly.ui.activity;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,12 +40,24 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.edit_password);
         mLoginButton = (Button) findViewById(R.id.button_login);
         mRegisterButton = (Button) findViewById(R.id.button_register);
+
+
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
+                if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
+                    //TODO check database
+
+                    Intent intent = new Intent(v.getContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    // Get snackbar view to set white background color
+                    Snackbar snack = Snackbar.make(v, "Please, enter an user & password", Snackbar.LENGTH_SHORT);
+                    View snackView = snack.getView();
+                    snackView.setBackgroundColor(Color.WHITE);
+                    snack.show();
+                }
             }
         });
         mRegisterButton.setOnClickListener(new View.OnClickListener() {

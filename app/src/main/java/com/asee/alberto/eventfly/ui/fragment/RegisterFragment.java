@@ -1,6 +1,7 @@
 package com.asee.alberto.eventfly.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -41,14 +42,28 @@ public class RegisterFragment extends Fragment {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mPassword.equals(mPasswordRepeat)) { //if both passwords match
+
+                if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && mPassword.getText().toString().equals(mPasswordRepeat.getText().toString())){
                     //TODO save in database
                     //Load main activity
                     Intent intent = new Intent(view.getContext(), MainActivity.class);
                     startActivity(intent);
                 }else{
-                    Snackbar.make(view, "Passwords doesn't match! :(", Snackbar.LENGTH_SHORT)
-                            .show();
+                    if(mUser.getText().toString().isEmpty() || mPassword.getText().toString().isEmpty()){
+                        // Get snackbar view to set white background color
+                        Snackbar snack = Snackbar.make(view, "Please enter the fields", Snackbar.LENGTH_SHORT);
+                        View snackView = snack.getView();
+                        snackView.setBackgroundColor(Color.WHITE);
+                        snack.show();
+                    }else{
+                        // Get snackbar view to set white background color
+                        Snackbar snack = Snackbar.make(view, "Passwords doesn't match! :(", Snackbar.LENGTH_SHORT);
+                        View snackView = snack.getView();
+                        snackView.setBackgroundColor(Color.WHITE);
+                        snack.show();
+                    }
+
+
                 }
             }
         }); // </mRegisterButton.setOnClickListener>
@@ -56,10 +71,17 @@ public class RegisterFragment extends Fragment {
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(RegisterFragment.this).commit();
                 // TODO remove fragment and return to login activity
             }
         });
 
+
+
         return v;
     }
+
+
+
+
 }
