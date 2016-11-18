@@ -31,6 +31,8 @@ import io.realm.RealmConfiguration;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static String TAG = "LoginActivity";
+
     private EditText mUser;
     private EditText mPassword;
     private Button mLoginButton;
@@ -52,11 +54,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-                    UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), "", mPassword.getText().toString(), ""));
-
-                    Intent intent = new Intent(v.getContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(checkUserInDB(mUser.getText().toString(), mPassword.getText().toString())){
+                        Intent intent = new Intent(v.getContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Snackbar snack = Snackbar.make(v, "Wrong user or password", Snackbar.LENGTH_SHORT);
+                        View snackView = snack.getView();
+                        snackView.setBackgroundColor(Color.WHITE);
+                        snack.show();
+                    }
                 }else{
                     // Get snackbar view to set white background color
                     Snackbar snack = Snackbar.make(v, "Please, enter an user & password", Snackbar.LENGTH_SHORT);
@@ -74,5 +81,14 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("LoginActivity", "onClick register button");
             }
         });
+    }
+
+    private boolean checkUserInDB(String username, String password){
+        UserDB user = UserManager.getUserByName(username);
+
+        if(user != null && user.getPassword().equals(password))
+            return true;
+        else
+            return false;
     }
 }

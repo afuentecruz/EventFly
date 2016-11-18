@@ -9,15 +9,6 @@
     android:weightSum="1"
     tools:context=".ui.fragment.RegisterFragment">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="124dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="Logo"
-        app:srcCompat="@drawable/logo" />
-
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="wrap_content"
@@ -72,11 +63,11 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_height="36dp">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_cancel"
@@ -86,12 +77,12 @@
             android:background="@color/colorAccent"
             android:text="Cancel"
             android:textColor="@color/colorPrimaryText"
-            android:layout_height="36dp" />
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_register"
             android:layout_width="150dp"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="4dp"
             android:background="@color/colorAccent"

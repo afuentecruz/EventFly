@@ -15,6 +15,8 @@ import android.view.MenuItem;
 
 
 import com.asee.alberto.eventfly.R;
+import com.asee.alberto.eventfly.manager.UserManager;
+import com.asee.alberto.eventfly.model.UserDB;
 import com.asee.alberto.eventfly.ui.fragment.MapFragment;
 
 import java.util.Map;
@@ -22,11 +24,24 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static String TAG = "MainActivity";
+
     private String mActualScreen; // String to identify the currently displayed screen
 
+    private UserDB userDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(UserManager.getUser() == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }else{
+            userDB = UserManager.getUser();
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
