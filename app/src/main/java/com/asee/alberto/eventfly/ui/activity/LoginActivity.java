@@ -52,8 +52,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-
-
                     UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), "", mPassword.getText().toString(), ""));
 
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
