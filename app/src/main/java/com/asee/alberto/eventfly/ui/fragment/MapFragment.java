@@ -32,12 +32,13 @@ import com.asee.alberto.eventfly.R;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 
     //TAG that identifies the fragment
     public static String TAG = "MapFragment";
@@ -93,6 +94,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
 
         mMap.setOnMapLongClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
     }
 
@@ -206,5 +208,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(event.getLatitude(), event.getLongitude()))
                     .title(event.getName()));
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+        Log.i(TAG, " >>> Marker clicked" + marker.getTitle());
+        openMessageFragment(marker.getTitle());
+    }
+
+    public void openMessageFragment(String eventName){
+        Log.i(TAG, " >>> openMessageFragment " + eventName);
+        // Launches new fragment
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        Bundle bundle = new Bundle();
+        bundle.putString("eventName", eventName);
+
+        MessageFragment messageFragment = new MessageFragment();
+        messageFragment.setArguments(bundle);
+        //Launches CreateEventFragment and add MapFragment to back stack
+        fragmentTransaction.add(R.id.main_content, messageFragment, "messageFragment");
+        fragmentTransaction.addToBackStack("MapFragment");
+
+        // Commit the transaction
+        fragmentTransaction.commit();
     }
 }

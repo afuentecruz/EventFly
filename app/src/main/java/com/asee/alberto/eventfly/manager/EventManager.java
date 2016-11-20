@@ -32,7 +32,7 @@ public class EventManager {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(event);
         realm.commitTransaction();
-        Log.i(TAG, " >>> Saved in db " + event);
+        Log.i(TAG, " >>> Saved in db " + event.getName());
     }
 
     /**
