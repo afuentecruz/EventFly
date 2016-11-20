@@ -8,17 +8,22 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.asee.alberto.eventfly.manager.EventManager;
+import com.asee.alberto.eventfly.model.EventDB;
+import com.asee.alberto.eventfly.ui.activity.MainActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +32,9 @@ import com.asee.alberto.eventfly.R;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -76,8 +84,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMap = googleMap;
 
         if (checkPermission()) { //Checks if had system permissions
+            Log.i(TAG, " >>> User perms granted!");
             mMap.setMyLocationEnabled(true);
             centerMapOnMyLocation();
+            drawAllMarkers();
         } else {
             Log.i(TAG, "User permission NOT granted");
         }
@@ -97,17 +107,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             Log.i(TAG, "  >>> Loong tapped, point=" + point.latitude + " " + point.longitude);
 
+
+            CreateEventFragment createEventFragment = new CreateEventFragment();
+            CreateEventFragment.CreateEventListener listener = new CreateEventFragment.CreateEventListener(){
+                @Override
+                public void onSuccess(EventDB event) {
+                    Log.i(TAG, " >>> Receive event object " + event.getName() + " " + event.getDescription());
+                    drawNewMarker(event);
+                }
+
+                @Override
+                public void onNoEvent() {
+                    Log.i(TAG, " >>> no event :(");
+                }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                }
+            };
             // Launches new fragment
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the back stack
-            Fragment createEventFragment = new CreateEventFragment();
             Bundle bundle = new Bundle();
             bundle.putDouble("latitude", point.latitude);
             bundle.putDouble("longitude", point.longitude);
+            bundle.putParcelable("listener", listener);
             createEventFragment.setArguments(bundle);
             //Launches CreateEventFragment and add MapFragment to back stack
-            fragmentTransaction.add(R.id.main_content, createEventFragment, TAG).addToBackStack(null);
+            fragmentTransaction.add(R.id.main_content, createEventFragment, "CreateEventFragment");
+            fragmentTransaction.addToBackStack("MapFragment");
 
             // Commit the transaction
             fragmentTransaction.commit();
@@ -117,6 +151,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void centerMapOnMyLocation() {
+        Log.i(TAG, " >>> centerMapOnMyLocation");
         LocationManager locationManager;
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -151,5 +186,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         } else {
             return true;
         }
+    }
+
+    private void drawAllMarkers(){
+        Log.i(TAG, " >>> Drawing marker");
+
+        List<EventDB> eventDBList = EventManager.getAllEvents();
+
+        for(EventDB event : eventDBList){
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(event.getLatitude(), event.getLongitude()))
+                    .title(event.getName()));
+        }
+
+    }
+
+    private void drawNewMarker(EventDB event){
+        Log.i(TAG, " >>> Drawing a new marker");
+        mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(event.getLatitude(), event.getLongitude()))
+                    .title(event.getName()));
     }
 }

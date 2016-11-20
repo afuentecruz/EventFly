@@ -9,6 +9,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -31,7 +33,17 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Map;
+
 public class CreateEventFragment extends Fragment{
+
+    // This interface defines the type of messages that i want to communicate to my owner (mapFragment)
+    public interface CreateEventListener extends Parcelable{
+        // Onsuccess, when an event is correctly created
+        public abstract void onSuccess(EventDB event);
+        // When there is no event created
+        public abstract void onNoEvent();
+    }
 
     private static String TAG = "CreateEventFragment";
 
@@ -47,7 +59,11 @@ public class CreateEventFragment extends Fragment{
 
     private Double longitude;
 
-    public CreateEventFragment(){}
+    private CreateEventListener eventListener;
+
+    public CreateEventFragment(){
+        this.eventListener = null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +76,8 @@ public class CreateEventFragment extends Fragment{
         if(bundle != null) {
             latitude = bundle.getDouble("latitude");
             longitude = bundle.getDouble("longitude");
+            eventListener = bundle.getParcelable("listener");
+
             Log.i(TAG, " >>> From CreateEventFragment " + latitude + " " + longitude);
         }
         mEventName = (EditText) v.findViewById(R.id.event_name);
@@ -82,7 +100,12 @@ public class CreateEventFragment extends Fragment{
                     event.setLongitude(longitude);
                     EventManager.saveOrUpdateEvent(event);
 
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(CreateEventFragment.this).commit();
+                    // Notify the listener and pass the new object created
+                    if(eventListener != null){
+                        getActivity().onBackPressed();
+                        eventListener.onSuccess(event);
+
+                    }
                 }
             }
         });
