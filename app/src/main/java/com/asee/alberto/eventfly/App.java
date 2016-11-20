@@ -16,6 +16,7 @@ public class App extends Application{
 
         // Realm DB default configuration
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this)
+                .deleteRealmIfMigrationNeeded()
                 .name("eventfly.realm")
                 .schemaVersion(0)
                 .build());

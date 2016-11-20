@@ -48,7 +48,7 @@ public class RegisterFragment extends Fragment {
             public void onClick(View view) {
 
                 if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && mPassword.getText().toString().equals(mPasswordRepeat.getText().toString())){
-                    //TODO save in database
+
                     if(!registerUser(view, mUser.getText().toString(), mPassword.getText().toString())){
                         Snackbar snack = Snackbar.make(view, "User already exists!", Snackbar.LENGTH_SHORT);
                         View snackView = snack.getView();

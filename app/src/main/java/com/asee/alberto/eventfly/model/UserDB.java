@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class UserDB extends RealmObject{
     /**
-     * UserDB model for database
+     * UserDB database model
      * */
     //Username
     private String name;
