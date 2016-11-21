@@ -35,7 +35,7 @@ public class MessageFragment extends Fragment {
     //Edit Text with the content of the new message
     private EditText mEditTextNewMsg;
     // A list with all the messages of the event
-    private List<MessageDB> items;
+    private List<MessageDB> messageList;
     // Name of the event which belongs the messages
     private String eventName;
 
@@ -61,7 +61,7 @@ public class MessageFragment extends Fragment {
         }
 
         // Initialize the components
-        items = new ArrayList<MessageDB>();
+        messageList = new ArrayList<MessageDB>();
         mButtonSend = (Button) v.findViewById(R.id.send_button);
         mEditTextNewMsg = (EditText) v.findViewById(R.id.new_msg_body);
 
@@ -76,7 +76,7 @@ public class MessageFragment extends Fragment {
                     newMsg.setBody(mEditTextNewMsg.getText().toString());
 
                     //Add this new message to the message list
-                    items.add(newMsg);
+                    messageList.add(newMsg);
                     mEditTextNewMsg.setText("");
 
                     //Hide the keyboard
@@ -92,16 +92,16 @@ public class MessageFragment extends Fragment {
 /*
         MessageDB item1 = new MessageDB();
         item1.setBody("Hello world 1");
-        items.add(item1);
+        messageList.add(item1);
         MessageDB item2 = new MessageDB();
         item2.setBody("Hello world 2");
-        items.add(item2);
+        messageList.add(item2);
         MessageDB item3 = new MessageDB();
         item3.setBody("Hello world 3");
-        items.add(item3);*/
+        messageList.add(item3);*/
 
 
-        items.addAll(MessageManager.getMessageByEvent(eventName));
+        messageList.addAll(MessageManager.getMessageByEvent(eventName));
 
         // Instance the RecyclerView
         messageRecycler = (RecyclerView) v.findViewById(R.id.message_recycler);
@@ -112,7 +112,7 @@ public class MessageFragment extends Fragment {
         messageRecycler.setLayoutManager(layoutManager);
 
         // Create a new adaptar
-        messageAdapter = new MessageAdapter(items);
+        messageAdapter = new MessageAdapter(messageList);
         messageRecycler.setAdapter(messageAdapter);
         return v;
     }
