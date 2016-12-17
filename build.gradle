@@ -4,6 +4,11 @@ buildscript {
     repositories {
         jcenter()
     }
+
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:2.2.1"
+    }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
         // NOTE: Do not place your application dependencies here; they belong

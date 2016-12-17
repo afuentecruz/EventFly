@@ -44,7 +44,7 @@ public class EventManager {
         Realm realm = Realm.getDefaultInstance();
 
         realm.beginTransaction();
-        eventDBList = realm.allObjects(EventDB.class);
+        eventDBList = realm.where(EventDB.class).findAll();
         realm.commitTransaction();
         return eventDBList;
     }

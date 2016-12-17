@@ -14,8 +14,9 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
 
+        Realm.init(this.getApplicationContext());
         // Realm DB default configuration
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this)
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .name("eventfly.realm")
                 .schemaVersion(0)
