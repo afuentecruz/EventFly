@@ -14,7 +14,7 @@ import io.realm.Realm;
 
 public class MessageManager {
     /**
-     * Message database manager
+     * UserDTO database manager
      */
 
     private static String TAG = "MessageManager";

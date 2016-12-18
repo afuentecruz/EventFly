@@ -39,4 +39,20 @@ public class UserManager {
 
         return user;
     }
+
+    public static String getUserToken() {
+
+        return Realm.getDefaultInstance().where(UserDB.class).findFirst().getToken();
+    }
+
+    public static void saveUserToken(String token) {
+
+        Realm realm = Realm.getDefaultInstance();
+
+        realm.beginTransaction();
+        UserDB user = realm.where(UserDB.class).findFirst();
+        user.setToken(token);
+        realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+    }
 }

@@ -3,9 +3,12 @@ package com.asee.alberto.eventfly.rest;
 import com.asee.alberto.eventfly.model.EventDB;
 import com.asee.alberto.eventfly.model.MessageDB;
 import com.asee.alberto.eventfly.model.TokenDB;
-import com.asee.alberto.eventfly.model.TokenDTO;
+import com.asee.alberto.eventfly.model.TokenDto;
 import com.asee.alberto.eventfly.model.UserDB;
+import com.asee.alberto.eventfly.model.UserDto;
+import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
+
 
 import java.util.List;
 
@@ -36,12 +39,12 @@ public interface ApiInterface {
     void sendNewMessage(@Body MessageDB messagePost, Callback<ResponseBody> responseCallback);
 
     @POST("/api/registerUser")
-    void registerUser(@Body UserDB userPost, Callback<ResponseBody> responseCallback);
+    void registerUser(@Body UserDto userPost, Callback<String> responseCallback);
 
     @POST("/api/authenticateUser")
-    void authenticateUser(@Body TokenDTO tokenRequest, Callback<TokenDB> token);
+    void authenticateUser(@Body TokenDto tokenRequest, Callback<TokenDB> token);
 
     @POST("/api/authenticateUser")
-    TokenDB refreshToken(@Body TokenDTO tokenRequest);
+    TokenDB refreshToken(@Body TokenDto tokenRequest);
 
 }

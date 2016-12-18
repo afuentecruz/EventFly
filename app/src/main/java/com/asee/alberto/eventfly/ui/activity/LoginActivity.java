@@ -7,8 +7,6 @@ import android.os.Bundle;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,13 +18,11 @@ import android.support.v4.app.FragmentTransaction;
 import com.asee.alberto.eventfly.R;
 import com.asee.alberto.eventfly.manager.UserManager;
 import com.asee.alberto.eventfly.model.TokenDB;
-import com.asee.alberto.eventfly.model.TokenDTO;
+import com.asee.alberto.eventfly.model.TokenDto;
 import com.asee.alberto.eventfly.model.UserDB;
 import com.asee.alberto.eventfly.rest.ApiService;
 import com.asee.alberto.eventfly.ui.fragment.RegisterFragment;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -65,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Authenticate with the api and request an access token
                     if (checkUserInDB(mUser.getText().toString(), mPassword.getText().toString())) {
 
-                        ApiService.getClient().authenticateUser(new TokenDTO(mUser.getText().toString(), mPassword.getText().toString()), new Callback<TokenDB>() {
+                        ApiService.getClient().authenticateUser(new TokenDto(mUser.getText().toString(), mPassword.getText().toString()), new Callback<TokenDB>() {
                             @Override
                             public void success(TokenDB token, Response response) {
                                 Log.i(TAG, "Token: " + token.getToken());

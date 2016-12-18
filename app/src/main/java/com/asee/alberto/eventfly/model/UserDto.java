@@ -1,38 +1,36 @@
 package com.asee.alberto.eventfly.model;
+
 /**
- * Created by alberto on 15/11/16.
+ * Created by alberto on 18/12/16.
  */
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+public class UserDto {
 
-public class UserDB extends RealmObject{
     /**
      * UserDB database model
      * */
     //Username
     private String name;
 
-    //UserDB email
-    @PrimaryKey
+    //UserDto email
     private String email;
 
-    //UserDB password
+    //UserDto password
     private String password;
 
-    //UserDB avatar
+    //UserDto avatar
     private String photo;
 
-    //User token
+    //UserDto token
     private String token;
 
-    //User gcm token, void field but necessary to register in the api platform
+    //UserDto gcm token, void field but necessary to register in the api platform
     private String gcm_token;
 
-    public UserDB() {
+    public UserDto() {
     }
 
-    public UserDB(String name, String email, String password, String photo, String token) {
+    public UserDto(String name, String email, String password, String photo, String token) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -40,7 +38,7 @@ public class UserDB extends RealmObject{
         this.token = token;
     }
 
-    public UserDB(String name, String email, String password, String gcmToken) {
+    public UserDto(String name, String email, String password, String gcmToken) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -95,3 +93,4 @@ public class UserDB extends RealmObject{
         this.gcm_token = gcmToken;
     }
 }
+

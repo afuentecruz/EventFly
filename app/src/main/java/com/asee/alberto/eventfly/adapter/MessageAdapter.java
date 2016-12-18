@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    // Message list
+    // UserDTO list
     private List<MessageDB> messageList;
 
     public MessageAdapter(List<MessageDB> items) {

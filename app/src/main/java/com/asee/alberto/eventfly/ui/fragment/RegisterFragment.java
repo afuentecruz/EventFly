@@ -14,8 +14,16 @@ import android.widget.EditText;
 
 import com.asee.alberto.eventfly.R;
 import com.asee.alberto.eventfly.manager.UserManager;
+import com.asee.alberto.eventfly.model.TokenDB;
+import com.asee.alberto.eventfly.model.TokenDto;
 import com.asee.alberto.eventfly.model.UserDB;
+import com.asee.alberto.eventfly.repository.UserRepository;
+import com.asee.alberto.eventfly.rest.ApiService;
 import com.asee.alberto.eventfly.ui.activity.MainActivity;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class RegisterFragment extends Fragment {
 
@@ -49,16 +57,7 @@ public class RegisterFragment extends Fragment {
 
                 if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty() && mPassword.getText().toString().equals(mPasswordRepeat.getText().toString())){
 
-                    if(!registerUser(view, mUser.getText().toString(), mPassword.getText().toString())){
-                        Snackbar snack = Snackbar.make(view, "User already exists!", Snackbar.LENGTH_SHORT);
-                        View snackView = snack.getView();
-                        snackView.setBackgroundColor(Color.WHITE);
-                        snack.show();
-                    }else{
-                        //Load main activity
-                        Intent intent = new Intent(view.getContext(), MainActivity.class);
-                        startActivity(intent);
-                    }
+                    registerUser(view, mUser.getText().toString(), mPassword.getText().toString());
 
                 }else{
                     if(mUser.getText().toString().isEmpty() || mPassword.getText().toString().isEmpty()){
@@ -90,16 +89,56 @@ public class RegisterFragment extends Fragment {
         return v;
     }
 
-    public boolean registerUser(View v, String user, String password){
-        Log.d(TAG, " >>> Checking for exisiting user in DB...");
-        if(UserManager.getUserByName(user) == null){ //User not found, we must save it
-            Log.d(TAG, " >>> User not found!");
-            UserManager.saveOrUpdateUser(new UserDB(user, "", password, "", ""));
-            return true;
-        }else{
-            return false;
-        }
+    public void registerUser(final View v, final String user, final String password){
+
+        //(String name, String email, String password, String photo, String token, String gcmToken)
+        UserRepository.registerUser(user, password, new UserRepository.onUserResponse(){
+
+            @Override
+            public void onSuccess() {
+                Log.i(TAG, " ok");
+                loginUser();
+            }
+
+            @Override
+            public void onError(String err) {
+                Log.i(TAG, err);
+                loginUser(); // Gypsy kings!, the api returns text/plain and is not possible handle with gson converter
+            }
+        });
+        //UserManager.saveOrUpdateUser(new UserDB(user, "", password, "", ""));
+
     }
 
+    private void loginUser(){
+        final String username = mUser.getText().toString();
+        final String password = mPassword.getText().toString();
+
+        ApiService.getClient().authenticateUser(new TokenDto(username, password), new Callback<TokenDB>() {
+            @Override
+            public void success(TokenDB token, Response response) {
+                Log.i(TAG, "Token: " + token.getToken());
+                //Save or update the user in the local db
+                UserManager.saveOrUpdateUser(new UserDB(username, username, password, "", token.getToken()));
+
+                //Load main activity
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Error: " + error.getLocalizedMessage());
+            }
+        });
+    }
+
+    private void registerFailure(View v){
+        Snackbar snack = Snackbar.make(v, "Username already exists!", Snackbar.LENGTH_SHORT);
+        View snackView = snack.getView();
+        snackView.setBackgroundColor(Color.WHITE);
+        snack.show();
+    }
 
 }

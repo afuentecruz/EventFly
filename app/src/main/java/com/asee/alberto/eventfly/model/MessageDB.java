@@ -12,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 public class MessageDB extends RealmObject {
 
     /**
-     * Message model for database
+     * UserDTO model for database
      */
 
     // Event id which belongs the message
