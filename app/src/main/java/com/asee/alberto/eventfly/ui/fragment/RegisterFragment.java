@@ -91,23 +91,19 @@ public class RegisterFragment extends Fragment {
 
     public void registerUser(final View v, final String user, final String password){
 
-        //(String name, String email, String password, String photo, String token, String gcmToken)
         UserRepository.registerUser(user, password, new UserRepository.onUserResponse(){
 
             @Override
             public void onSuccess() {
-                Log.i(TAG, " ok");
                 loginUser();
             }
 
             @Override
             public void onError(String err) {
                 Log.i(TAG, err);
-                loginUser(); // Gypsy kings!, the api returns text/plain and is not possible handle with gson converter
+                loginUser(); // Gypsy kings!, the api returns text/plain and is not possible handle with the json parser
             }
         });
-        //UserManager.saveOrUpdateUser(new UserDB(user, "", password, "", ""));
-
     }
 
     private void loginUser(){

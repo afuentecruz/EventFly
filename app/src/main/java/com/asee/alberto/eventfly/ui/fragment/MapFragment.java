@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 
 import com.asee.alberto.eventfly.manager.EventManager;
 import com.asee.alberto.eventfly.model.EventDB;
+import com.asee.alberto.eventfly.model.EventDto;
+import com.asee.alberto.eventfly.rest.ApiService;
 import com.asee.alberto.eventfly.ui.activity.MainActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +37,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
@@ -49,6 +56,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private FloatingActionButton mFloatButton;
     // Boolean that lets the user create an event
     private boolean putEvent;
+    // Marker map to associate markers with events id
+    private HashMap<Marker, String> mMarkerList;
 
     Snackbar snack;
 
@@ -88,7 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             Log.i(TAG, " >>> User perms granted!");
             mMap.setMyLocationEnabled(true);
             centerMapOnMyLocation();
-            drawAllMarkers();
+            loadEventsFromServer();
         } else {
             Log.i(TAG, "User permission NOT granted");
         }
@@ -196,7 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         List<EventDB> eventDBList = EventManager.getAllEvents();
 
         for(EventDB event : eventDBList){
-            mMap.addMarker(new MarkerOptions()
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(event.getLatitude(), event.getLongitude()))
                     .title(event.getName()));
         }
@@ -213,7 +222,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-        Log.i(TAG, " >>> Marker clicked" + marker.getTitle());
+        Log.i(TAG, " >>> Marker clicked" + marker.getTitle() + " - " + marker.getId());
         openMessageFragment(marker.getTitle());
     }
 
@@ -242,6 +251,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         if(mMap != null){
             centerMapOnMyLocation();
         }
+    }
+
+    private void loadEventsFromServer(){
+
+        ApiService.getClient().getEvents(new Callback<List<EventDto>>() {
+            @Override
+            public void success(List<EventDto> events, Response response) {
+                EventManager.saveEvents(events);
+                // Once they are saved we draw them on the map
+                drawAllMarkers();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Retrofit", error.toString());
+
+            }
+        });
 
     }
 }

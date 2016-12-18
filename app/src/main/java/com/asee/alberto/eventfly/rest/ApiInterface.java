@@ -1,7 +1,9 @@
 package com.asee.alberto.eventfly.rest;
 
 import com.asee.alberto.eventfly.model.EventDB;
+import com.asee.alberto.eventfly.model.EventDto;
 import com.asee.alberto.eventfly.model.MessageDB;
+import com.asee.alberto.eventfly.model.MessageDto;
 import com.asee.alberto.eventfly.model.TokenDB;
 import com.asee.alberto.eventfly.model.TokenDto;
 import com.asee.alberto.eventfly.model.UserDB;
@@ -30,13 +32,13 @@ public interface ApiInterface {
      * Api interface with the endpoints to call the api
      */
     @GET("/api/getEvents")
-    void getEvents(Callback<List<EventDB>> eventCallback);
+    void getEvents(Callback<List<EventDto>> eventCallback);
 
     @GET("/api/getMessagesWithOwners/{eventId}")
     void getMessagesForEvent(@Path("eventId") String eventId, Callback<List<MessageDB>> messageCallback);
 
     @POST("/api/createMessage")
-    void sendNewMessage(@Body MessageDB messagePost, Callback<ResponseBody> responseCallback);
+    void sendNewMessage(@Body MessageDto messagePost, Callback<ResponseBody> responseCallback);
 
     @POST("/api/registerUser")
     void registerUser(@Body UserDto userPost, Callback<String> responseCallback);

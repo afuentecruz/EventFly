@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,11 @@ import android.widget.TextView;
 
 import com.asee.alberto.eventfly.R;
 import com.asee.alberto.eventfly.adapter.MessageAdapter;
+import com.asee.alberto.eventfly.manager.EventManager;
 import com.asee.alberto.eventfly.manager.MessageManager;
 import com.asee.alberto.eventfly.model.MessageDB;
+import com.asee.alberto.eventfly.model.MessageDto;
+import com.asee.alberto.eventfly.repository.MessageRepository;
 import com.asee.alberto.eventfly.ui.activity.MainActivity;
 
 import java.util.ArrayList;
@@ -38,6 +42,8 @@ public class MessageFragment extends Fragment {
     private List<MessageDB> messageList;
     // Name of the event which belongs the messages
     private String eventName;
+    // Id of the event
+    private String eventId;
 
 
     private RecyclerView messageRecycler;
@@ -56,6 +62,8 @@ public class MessageFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if(bundle != null){
             eventName = bundle.getString("eventName");
+            eventId = EventManager.findIdByName(eventName);
+            Log.i("MessageFragment", eventName + " - " + eventId);
             ((MainActivity) getActivity()).setActionBarTitle(eventName);
 
         }
@@ -100,8 +108,8 @@ public class MessageFragment extends Fragment {
         item3.setBody("Hello world 3");
         messageList.add(item3);*/
 
-
-        messageList.addAll(MessageManager.getMessageByEvent(eventName));
+        getAllMessagesFromServer();
+        //messageList.addAll(MessageManager.getMessageByEvent(eventName));
 
         // Instance the RecyclerView
         messageRecycler = (RecyclerView) v.findViewById(R.id.message_recycler);
@@ -122,4 +130,46 @@ public class MessageFragment extends Fragment {
         msg.setEventName(eventName);
         MessageManager.saveOrUpdateMessage(msg);
     }
+
+    /**
+     * This method get all the messages from the server
+     */
+    private void getAllMessagesFromServer() {
+
+        MessageRepository.getMessagesForEvent(eventId, new MessageRepository.onMessageResponse() {
+
+            @Override
+            public void onSuccess(List<MessageDB> messages) {
+                messageList.clear();
+                messageList.addAll(messages);
+                messageAdapter.notifyDataSetChanged();
+                reconfigureView();
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("Error", message);
+                reconfigureView();
+            }
+        });
+    }
+
+    /**
+     * This method reconfigure the view stat
+     */
+    private void reconfigureView() {
+
+        if (messageList.isEmpty()) {
+            messageRecycler.setVisibility(View.GONE);
+        } else {
+            messageRecycler.setVisibility(View.VISIBLE);
+            messageRecycler.smoothScrollToPosition(messageList.size() + 1);
+
+        }
+    }
+
+    public static MessageDB messageDtoToMessageDB(MessageDto message){
+        return new MessageDB(message.getIdEvent(), message.getBody(), message.getEventName());
+    }
+
 }

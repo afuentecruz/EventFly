@@ -1,61 +1,53 @@
 package com.asee.alberto.eventfly.model;
 
-import android.app.usage.UsageEvents;
+import com.google.gson.annotations.SerializedName;
 
-import java.util.UUID;
-
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.List;
 
 /**
- * Created by alberto on 19/11/16.
+ * Created by alberto on 18/12/16.
  */
 
-public class EventDB extends RealmObject {
-    /**
-     * EventDB database model
-     */
-    //Event id
-    @PrimaryKey
+public class EventDto {
+
+    //The Event id
+    @SerializedName("_id")
     private String id;
+
     //Name of the event
     private String name;
-    //Description for event
-    private String description;
-    //Image for event
-    private String image;
+
     //User that created the event
     private String owner;
+
     //Longitude of the event position
     private double longitude;
+
     //Latitude of the event position
     private double latitude;
+
     //Radius of event action
     private float radius;
-    //List of tags associated to an event
-    private RealmList<TagDB> tagList;
 
-    public EventDB(){
-        this.id = UUID.randomUUID().toString(); //Randomized id TODO too much gypsy (must get from the api)
+    //List of tags associated to an event
+    private List<String> tagList;
+
+    public EventDto() {
     }
 
-    public EventDB(String id, String name, double latitude, double longitude, float radius, String owner, RealmList<TagDB> tagList){
+    public EventDto (String id, String name, double latitude, double longitude, float radius, String owner, List<String> tagList){
         this.id = id;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.radius = radius;
         this.owner = owner;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.radius = radius;
         this.tagList = tagList;
     }
 
-    public EventDB(String name, String description, String image, String owner, double longitude, double latitude, float radius, RealmList<TagDB> tagList) {
-        this.id = UUID.randomUUID().toString();
+    public EventDto(String id, String name, String owner, double longitude, double latitude, float radius, List<String> tagList) {
+        this.id = id;
         this.name = name;
-        this.description = description;
-        this.image = image;
         this.owner = owner;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -77,22 +69,6 @@ public class EventDB extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getOwner() {
@@ -127,11 +103,11 @@ public class EventDB extends RealmObject {
         this.radius = radius;
     }
 
-    public RealmList<TagDB> getTagList() {
+    public List<String> getTagList() {
         return tagList;
     }
 
-    public void setTagList(RealmList<TagDB> tagList) {
+    public void setTagList(List<String> tagList) {
         this.tagList = tagList;
     }
 }

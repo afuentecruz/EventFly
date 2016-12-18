@@ -11,9 +11,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class MessageDB extends RealmObject {
 
-    /**
-     * UserDTO model for database
-     */
 
     // Event id which belongs the message
     @PrimaryKey
@@ -27,9 +24,10 @@ public class MessageDB extends RealmObject {
         idEvent = UUID.randomUUID().toString();
     }
 
-    public MessageDB(String idEvent, String body) {
+    public MessageDB(String idEvent, String body, String eventName) {
         this.idEvent = idEvent;
         this.body = body;
+        this.eventName = eventName;
     }
 
     public String getIdEvent() {

@@ -3,6 +3,7 @@ package com.asee.alberto.eventfly.manager;
 import android.util.Log;
 
 import com.asee.alberto.eventfly.model.MessageDB;
+import com.asee.alberto.eventfly.model.MessageDto;
 
 import java.util.List;
 
@@ -48,6 +49,10 @@ public class MessageManager {
         realm.commitTransaction();
 
         return messageDBList;
+    }
+
+    public static MessageDB messageDtoToMessageDB(MessageDto message){
+        return new MessageDB(message.getIdEvent(), message.getBody(), message.getEventName());
     }
 
 }
