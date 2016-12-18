@@ -1,7 +1,9 @@
 package com.asee.alberto.eventfly.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +21,6 @@ import com.asee.alberto.eventfly.adapter.MessageAdapter;
 import com.asee.alberto.eventfly.manager.EventManager;
 import com.asee.alberto.eventfly.manager.MessageManager;
 import com.asee.alberto.eventfly.model.MessageDB;
-import com.asee.alberto.eventfly.model.MessageDto;
 import com.asee.alberto.eventfly.repository.MessageRepository;
 import com.asee.alberto.eventfly.ui.activity.MainActivity;
 
@@ -128,7 +129,10 @@ public class MessageFragment extends Fragment {
     private void persisNewMessage(MessageDB msg){
 
         msg.setEventName(eventName);
+        msg.setIdEvent(eventId);
         MessageManager.saveOrUpdateMessage(msg);
+        postMessageToServer(msg);
+
     }
 
     /**
@@ -143,21 +147,21 @@ public class MessageFragment extends Fragment {
                 messageList.clear();
                 messageList.addAll(messages);
                 messageAdapter.notifyDataSetChanged();
-                reconfigureView();
+                refreshView();
             }
 
             @Override
             public void onError(String message) {
                 Log.e("Error", message);
-                reconfigureView();
+                refreshView();
             }
         });
     }
 
     /**
-     * This method reconfigure the view stat
+     * This method reconfigure the view to position at the end
      */
-    private void reconfigureView() {
+    private void refreshView() {
 
         if (messageList.isEmpty()) {
             messageRecycler.setVisibility(View.GONE);
@@ -168,8 +172,28 @@ public class MessageFragment extends Fragment {
         }
     }
 
-    public static MessageDB messageDtoToMessageDB(MessageDto message){
-        return new MessageDB(message.getIdEvent(), message.getBody(), message.getEventName());
-    }
+    public void postMessageToServer(MessageDB msg) {
 
+        MessageRepository.sendMessageToServer(msg.getIdEvent(), msg.getBody(), new MessageRepository.onSendMessageToServer() {
+            @Override
+            public void onSuccess() {
+                Snackbar snack = Snackbar.make(getView(), "Message posted! :D", Snackbar.LENGTH_LONG);
+                View snackView = snack.getView();
+                snackView.setBackgroundColor(Color.WHITE);
+                snack.show();
+
+                getAllMessagesFromServer();
+            }
+
+            @Override
+            public void onError(String message) {
+                Snackbar snack = Snackbar.make(getView(), "Error posting the message! :(", Snackbar.LENGTH_LONG);
+                View snackView = snack.getView();
+                snackView.setBackgroundColor(Color.WHITE);
+                snack.show();
+
+                getAllMessagesFromServer();
+            }
+        });
+    }
 }

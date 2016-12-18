@@ -64,10 +64,10 @@ public class MessageRepository {
     /**
      * This method send new message to server associated to an event ID (messageEvent)
      */
-    public static void sendMessageToServer(String messageEvent, String message, final onSendMessageToServer onSendMessageToServer) {
+    public static void sendMessageToServer(String idEvent, String body, final onSendMessageToServer onSendMessageToServer) {
 
 
-        ApiService.getAuthClient().sendNewMessage(new MessageDto(messageEvent, message, UserManager.getUserToken()), new Callback<ResponseBody>() {
+        ApiService.getAuthClient().sendNewMessage(new MessageDto(body, idEvent, UserManager.getUserToken()), new Callback<ResponseBody>() {
             @Override
             public void success(ResponseBody responseBody, Response response) {
                 onSendMessageToServer.onSuccess();
