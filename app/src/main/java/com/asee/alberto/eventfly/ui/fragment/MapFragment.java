@@ -235,4 +235,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         // Commit the transaction
         fragmentTransaction.commit();
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(mMap != null){
+            centerMapOnMyLocation();
+        }
+
+    }
 }

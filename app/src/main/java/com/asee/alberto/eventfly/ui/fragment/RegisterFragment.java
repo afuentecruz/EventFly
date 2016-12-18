@@ -94,7 +94,7 @@ public class RegisterFragment extends Fragment {
         Log.d(TAG, " >>> Checking for exisiting user in DB...");
         if(UserManager.getUserByName(user) == null){ //User not found, we must save it
             Log.d(TAG, " >>> User not found!");
-            UserManager.saveOrUpdateUser(new UserDB(user, "", password, ""));
+            UserManager.saveOrUpdateUser(new UserDB(user, "", password, "", ""));
             return true;
         }else{
             return false;

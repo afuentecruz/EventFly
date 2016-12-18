@@ -23,14 +23,18 @@ public class UserDB extends RealmObject{
     //UserDB avatar
     private String photo;
 
+    //User token
+    private String token;
+
     public UserDB() {
     }
 
-    public UserDB(String name, String email, String password, String photo) {
+    public UserDB(String name, String email, String password, String photo, String token) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.photo = photo;
+        this.token = token;
     }
 
     public String getName() {
@@ -63,5 +67,13 @@ public class UserDB extends RealmObject{
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getToken(){
+        return this.token;
+    }
+
+    public void setToken(String token){
+        this.token = token;
     }
 }

@@ -19,11 +19,17 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.asee.alberto.eventfly.R;
 import com.asee.alberto.eventfly.manager.UserManager;
+import com.asee.alberto.eventfly.model.TokenDB;
+import com.asee.alberto.eventfly.model.TokenDTO;
 import com.asee.alberto.eventfly.model.UserDB;
+import com.asee.alberto.eventfly.rest.ApiService;
 import com.asee.alberto.eventfly.ui.fragment.RegisterFragment;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by alberto on 29/10/16.
@@ -52,30 +58,48 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()){
-                    if(checkUserInDB(mUser.getText().toString(), mPassword.getText().toString())){
-                        Intent intent = new Intent(v.getContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        Snackbar snack = Snackbar.make(v, "Wrong user or password", Snackbar.LENGTH_SHORT);
+            public void onClick(final View v) {
+
+                // If the input fields are not empty
+                if (!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()) {
+                    // Authenticate with the api and request an access token
+                    if (checkUserInDB(mUser.getText().toString(), mPassword.getText().toString())) {
+
+                        ApiService.getClient().authenticateUser(new TokenDTO(mUser.getText().toString(), mPassword.getText().toString()), new Callback<TokenDB>() {
+                            @Override
+                            public void success(TokenDB token, Response response) {
+                                Log.i(TAG, "Token: " + token.getToken());
+
+                                //Save or update the user in the local db
+                                UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), mUser.getText().toString(), mPassword.getText().toString(), "", token.getToken()));
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.d(TAG, "Error: " + error.getLocalizedMessage());
+                                Snackbar snack = Snackbar.make(v, "Wrong user or password", Snackbar.LENGTH_SHORT);
+                                View snackView = snack.getView();
+                                snackView.setBackgroundColor(Color.WHITE);
+                                snack.show();
+                            }
+                        });
+
+                    } else {
+                        // Get snackbar view to set white background color
+                        Snackbar snack = Snackbar.make(v, "Please, enter an user & password", Snackbar.LENGTH_SHORT);
                         View snackView = snack.getView();
                         snackView.setBackgroundColor(Color.WHITE);
                         snack.show();
                     }
-                }else{
-                    // Get snackbar view to set white background color
-                    Snackbar snack = Snackbar.make(v, "Please, enter an user & password", Snackbar.LENGTH_SHORT);
-                    View snackView = snack.getView();
-                    snackView.setBackgroundColor(Color.WHITE);
-                    snack.show();
                 }
             }
         });
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
+        mRegisterButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onClick (View v){
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.add(R.id.login_container, new RegisterFragment()).addToBackStack(null).commit();
                 Log.i("LoginActivity", "onClick register button");
@@ -83,10 +107,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean checkUserInDB(String username, String password){
+
+    private boolean checkUserInDB(String username, String password) {
         UserDB user = UserManager.getUserByName(username);
 
-        if(user != null && user.getPassword().equals(password))
+        if (user != null && user.getPassword().equals(password))
             return true;
         else
             return false;
