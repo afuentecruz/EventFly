@@ -36,7 +36,6 @@ public class EventManager {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(event);
         realm.commitTransaction();
-        Log.i(TAG, " >>> Saved in db " + event.getName());
     }
 
     public static String findIdByName(String name){
@@ -46,7 +45,6 @@ public class EventManager {
         realm.beginTransaction();
         EventDB event = realm.where(EventDB.class).equalTo("name", name).findFirst();
         realm.commitTransaction();
-        Log.i("@@@@@@@@@", event.getName() + " " + event.getId() + " " + event.getId().toString());
         return event.getId();
     }
 
@@ -72,9 +70,7 @@ public class EventManager {
         List<EventDB> eventDBs = new ArrayList<>();
 
         for (EventDto e : eventList) {
-
             eventDBs.add(eventDTOtoDB(e));
-            Log.i("EventManager", "Guardando " + e.getId()+ " " + e.getName());
         }
 
         Realm realm = Realm.getDefaultInstance();

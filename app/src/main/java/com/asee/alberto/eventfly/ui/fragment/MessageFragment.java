@@ -97,20 +97,7 @@ public class MessageFragment extends Fragment {
 
         });
 
-        // Items getter
-/*
-        MessageDB item1 = new MessageDB();
-        item1.setBody("Hello world 1");
-        messageList.add(item1);
-        MessageDB item2 = new MessageDB();
-        item2.setBody("Hello world 2");
-        messageList.add(item2);
-        MessageDB item3 = new MessageDB();
-        item3.setBody("Hello world 3");
-        messageList.add(item3);*/
-
         getAllMessagesFromServer();
-        //messageList.addAll(MessageManager.getMessageByEvent(eventName));
 
         // Instance the RecyclerView
         messageRecycler = (RecyclerView) v.findViewById(R.id.message_recycler);
@@ -120,7 +107,7 @@ public class MessageFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         messageRecycler.setLayoutManager(layoutManager);
 
-        // Create a new adaptar
+        // Create a new adapter
         messageAdapter = new MessageAdapter(messageList);
         messageRecycler.setAdapter(messageAdapter);
         return v;

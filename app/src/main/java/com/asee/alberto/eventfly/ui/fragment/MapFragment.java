@@ -219,14 +219,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     }
 
-   /* private void drawNewMarker(EventDB event){
-        Log.i(TAG, " >>> Drawing a new marker");
-        mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(event.getLatitude(), event.getLongitude()))
-                    .title(event.getName()));
-        postNewEventToServer(event);
-    }*/
-
     @Override
     public void onInfoWindowClick(Marker marker) {
 
@@ -274,7 +266,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("Retrofit", error.toString());
+                Log.i("Retrofit", error.toString());
 
             }
         });

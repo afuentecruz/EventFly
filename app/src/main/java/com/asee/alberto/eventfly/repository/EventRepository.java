@@ -22,14 +22,6 @@ import retrofit.client.Response;
 
 public class EventRepository {
 
-
-    public interface onEvetResponse {
-
-        void onSuccess(List<EventDB> events);
-
-        void onError(String message);
-    }
-
     public interface onSendEventToServer {
 
         void onSuccess();
