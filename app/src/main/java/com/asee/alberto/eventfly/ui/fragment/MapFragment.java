@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import com.asee.alberto.eventfly.manager.EventManager;
 import com.asee.alberto.eventfly.model.EventDB;
 import com.asee.alberto.eventfly.model.EventDto;
+import com.asee.alberto.eventfly.model.TagDB;
+import com.asee.alberto.eventfly.repository.EventRepository;
 import com.asee.alberto.eventfly.rest.ApiService;
 import com.asee.alberto.eventfly.ui.activity.MainActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,9 +39,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.RealmList;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -56,8 +60,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private FloatingActionButton mFloatButton;
     // Boolean that lets the user create an event
     private boolean putEvent;
-    // Marker map to associate markers with events id
-    private HashMap<Marker, String> mMarkerList;
+
+    private HashMap<String, String> eventList = new HashMap<>();
+
 
     Snackbar snack;
 
@@ -124,7 +129,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 @Override
                 public void onSuccess(EventDB event) {
                     Log.i(TAG, " >>> Receive event object " + event.getName() + " " + event.getDescription());
-                    drawNewMarker(event);
+                    postNewEventToServer(event);
                 }
 
                 @Override
@@ -205,24 +210,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         List<EventDB> eventDBList = EventManager.getAllEvents();
 
         for(EventDB event : eventDBList){
-            Marker marker = mMap.addMarker(new MarkerOptions()
+            mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(event.getLatitude(), event.getLongitude()))
                     .title(event.getName()));
+
+            eventList.put(event.getName(), event.getId());
         }
 
     }
 
-    private void drawNewMarker(EventDB event){
+   /* private void drawNewMarker(EventDB event){
         Log.i(TAG, " >>> Drawing a new marker");
         mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(event.getLatitude(), event.getLongitude()))
                     .title(event.getName()));
-    }
+        postNewEventToServer(event);
+    }*/
 
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-        Log.i(TAG, " >>> Marker clicked" + marker.getTitle() + " - " + marker.getId());
+        Log.i(TAG, " >>> Marker clicked" + marker.getTitle());
         openMessageFragment(marker.getTitle());
     }
 
@@ -234,6 +242,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         // and add the transaction to the back stack
         Bundle bundle = new Bundle();
         bundle.putString("eventName", eventName);
+        bundle.putString("eventId", eventList.get(eventName));
 
         MessageFragment messageFragment = new MessageFragment();
         messageFragment.setArguments(bundle);
@@ -269,6 +278,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             }
         });
-
     }
+
+    private void postNewEventToServer(EventDB event){
+        //String eventName, double latitude, double longitude, float radius, List<String> tagList
+
+        EventRepository.sendEventToServer(event.getName(), event.getLatitude(), event.getLongitude(), event.getRadius(), new EventRepository.onSendEventToServer() {
+            @Override
+            public void onSuccess() {
+                loadEventsFromServer();
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.i(TAG, "Error posting event:" + message);
+            }
+        });
+    }
+
 }

@@ -59,37 +59,27 @@ public class LoginActivity extends AppCompatActivity {
                 // If the input fields are not empty
                 if (!mUser.getText().toString().isEmpty() && !mPassword.getText().toString().isEmpty()) {
                     // Authenticate with the api and request an access token
-                    if (checkUserInDB(mUser.getText().toString(), mPassword.getText().toString())) {
+                    ApiService.getClient().authenticateUser(new TokenDto(mUser.getText().toString(), mPassword.getText().toString()), new Callback<TokenDB>() {
+                        @Override
+                        public void success(TokenDB token, Response response) {
+                            Log.i(TAG, "Token: " + token.getToken());
 
-                        ApiService.getClient().authenticateUser(new TokenDto(mUser.getText().toString(), mPassword.getText().toString()), new Callback<TokenDB>() {
-                            @Override
-                            public void success(TokenDB token, Response response) {
-                                Log.i(TAG, "Token: " + token.getToken());
+                            //Save or update the user in the local db
+                            UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), mUser.getText().toString(), mPassword.getText().toString(), "", token.getToken()));
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
 
-                                //Save or update the user in the local db
-                                UserManager.saveOrUpdateUser(new UserDB(mUser.getText().toString(), mUser.getText().toString(), mPassword.getText().toString(), "", token.getToken()));
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                Log.d(TAG, "Error: " + error.getLocalizedMessage());
-                                Snackbar snack = Snackbar.make(v, "Wrong user or password", Snackbar.LENGTH_SHORT);
-                                View snackView = snack.getView();
-                                snackView.setBackgroundColor(Color.WHITE);
-                                snack.show();
-                            }
-                        });
-
-                    } else {
-                        // Get snackbar view to set white background color
-                        Snackbar snack = Snackbar.make(v, "Please, enter an user & password", Snackbar.LENGTH_SHORT);
-                        View snackView = snack.getView();
-                        snackView.setBackgroundColor(Color.WHITE);
-                        snack.show();
-                    }
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.d(TAG, "Error: " + error.getLocalizedMessage());
+                            Snackbar snack = Snackbar.make(v, "Wrong user or password. Are you registered?", Snackbar.LENGTH_SHORT);
+                            View snackView = snack.getView();
+                            snackView.setBackgroundColor(Color.WHITE);
+                            snack.show();
+                        }
+                    });
                 }
             }
         });
@@ -101,15 +91,5 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("LoginActivity", "onClick register button");
             }
         });
-    }
-
-
-    private boolean checkUserInDB(String username, String password) {
-        UserDB user = UserManager.getUserByName(username);
-
-        if (user != null && user.getPassword().equals(password))
-            return true;
-        else
-            return false;
     }
 }

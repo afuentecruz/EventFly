@@ -63,7 +63,7 @@ public class MessageFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if(bundle != null){
             eventName = bundle.getString("eventName");
-            eventId = EventManager.findIdByName(eventName);
+            eventId = bundle.getString("eventId");
             Log.i("MessageFragment", eventName + " - " + eventId);
             ((MainActivity) getActivity()).setActionBarTitle(eventName);
 

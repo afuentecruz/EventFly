@@ -1,6 +1,7 @@
 package com.asee.alberto.eventfly.model;
 
 import android.app.usage.UsageEvents;
+import android.util.Log;
 
 import java.util.UUID;
 
@@ -41,26 +42,15 @@ public class EventDB extends RealmObject {
         this.id = UUID.randomUUID().toString(); //Randomized id TODO too much gypsy (must get from the api)
     }
 
-    public EventDB(String id, String name, double latitude, double longitude, float radius, String owner, RealmList<TagDB> tagList){
+//event.getName(), event.getLatitude(), event.getLongitude(), event.getRadius()
+    public EventDB(String id, String name, double longitude, double latitude, float radius) {
         this.id = id;
+        Log.i("#############", id);
+        Log.i("#############2", this.id);
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.radius = radius;
-        this.owner = owner;
-        this.tagList = tagList;
-    }
-
-    public EventDB(String name, String description, String image, String owner, double longitude, double latitude, float radius, RealmList<TagDB> tagList) {
-        this.id = UUID.randomUUID().toString();
-        this.name = name;
-        this.description = description;
-        this.image = image;
-        this.owner = owner;
         this.longitude = longitude;
         this.latitude = latitude;
         this.radius = radius;
-        this.tagList = tagList;
     }
 
     public String getId() {

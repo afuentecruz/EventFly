@@ -34,6 +34,9 @@ public interface ApiInterface {
     @GET("/api/getEvents")
     void getEvents(Callback<List<EventDto>> eventCallback);
 
+    @POST("/api/createEvent")
+    void sendNewEvent(@Body EventDto eventPost, Callback<ResponseBody> responseCallback);
+
     @GET("/api/getMessagesWithOwners/{eventId}")
     void getMessagesForEvent(@Path("eventId") String eventId, Callback<List<MessageDB>> messageCallback);
 

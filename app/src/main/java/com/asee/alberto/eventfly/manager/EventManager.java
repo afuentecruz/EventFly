@@ -46,7 +46,7 @@ public class EventManager {
         realm.beginTransaction();
         EventDB event = realm.where(EventDB.class).equalTo("name", name).findFirst();
         realm.commitTransaction();
-
+        Log.i("@@@@@@@@@", event.getName() + " " + event.getId() + " " + event.getId().toString());
         return event.getId();
     }
 
@@ -74,6 +74,7 @@ public class EventManager {
         for (EventDto e : eventList) {
 
             eventDBs.add(eventDTOtoDB(e));
+            Log.i("EventManager", "Guardando " + e.getId()+ " " + e.getName());
         }
 
         Realm realm = Realm.getDefaultInstance();
@@ -87,9 +88,8 @@ public class EventManager {
      * This method convert a DTO object to a DB object
      */
     private static EventDB eventDTOtoDB(EventDto e) {
-
-        //String name, String description, String image, String owner, double longitude, double latitude, float radius, RealmList<TagDB> tagList) {
-        return new EventDB(e.getId(), e.getName(), e.getLatitude(), e.getLongitude(), e.getRadius(), e.getOwner(), tagListToRealmList(e.getTagList()));
+        //id, event.getName(), event.getLatitude(), event.getLongitude(), event.getRadius()
+        return new EventDB(e.getId(), e.getName(), e.getLatitude(), e.getLongitude(), e.getRadius());
     }
 
 

@@ -32,6 +32,9 @@ public class EventDto {
     //List of tags associated to an event
     private List<String> tagList;
 
+    //Auth token in order to post into the server
+    private String token;
+
     public EventDto() {
     }
 
@@ -45,10 +48,16 @@ public class EventDto {
         this.tagList = tagList;
     }
 
-    public EventDto(String id, String name, String owner, double longitude, double latitude, float radius, List<String> tagList) {
-        this.id = id;
+    public EventDto(String name, double longitude, double latitude, float radius, String token) {
         this.name = name;
-        this.owner = owner;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.radius = radius;
+        this.token = token;
+    }
+
+    public EventDto(String name, double longitude, double latitude, float radius, List<String> tagList) {
+        this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;
         this.radius = radius;
